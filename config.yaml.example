@@ -1,0 +1,57 @@
+# =============================================================================
+#  config.yaml  -  HLRCC tumour-normal somatic variant calling pipeline
+# =============================================================================
+#
+#  Configuration template consumed by HLRCC_Exome_Variant_Calling.sh.
+#
+#  Usage
+#  -----
+#    1. Copy this file to `config.yaml` in the working directory:
+#         cp config.yaml.example config.yaml
+#    2. Fill in absolute paths and sample names for one tumour-normal pair.
+#    3. Run the pipeline:
+#         ./HLRCC_Exome_Variant_Calling.sh
+#    4. For additional pairs, swap in a different `config.yaml` and re-run.
+#
+#  Notes
+#  -----
+#    - All paths should be absolute.
+#    - The reference FASTA must be pre-indexed:
+#         bwa index <reference.fasta>
+#         samtools faidx <reference.fasta>
+#         gatk CreateSequenceDictionary -R <reference.fasta>
+#    - The Funcotator data-sources bundle can be downloaded with:
+#         gatk FuncotatorDataSourceDownloader --somatic --validate-integrity
+# =============================================================================
+
+reference:
+  # GRCh38 reference FASTA (bwa-indexed, faidx-indexed, with .dict).
+  fasta: /path/to/GRCh38.primary_assembly.genome.fa
+
+  # Path to the unpacked Funcotator data-sources directory (somatic bundle).
+  funcotator_sources: /path/to/funcotator_dataSources.v1.7.20200521s
+
+  # Reference version string passed to `Funcotator --ref-version`.
+  # Use "hg38" for GRCh38 or "hg19" for GRCh37.
+  ref_version: hg38
+
+resources:
+  # CPU threads for BWA-MEM and samtools sort.
+  threads: 8
+
+  # Output root. Will be created with bam/, vcf/, maf/ subdirectories.
+  outdir: /path/to/output
+
+samples:
+  tumor:
+    # Sample name written into the BAM read group (RGSM) and used in output filenames.
+    name: HLRCC_T1
+    # Paired-end FASTQ files for the tumour sample (.fastq.gz supported).
+    fastq1: /path/to/HLRCC_T1_R1.fastq.gz
+    fastq2: /path/to/HLRCC_T1_R2.fastq.gz
+
+  normal:
+    # Matched-normal sample name and FASTQs for the same patient.
+    name: HLRCC_N1
+    fastq1: /path/to/HLRCC_N1_R1.fastq.gz
+    fastq2: /path/to/HLRCC_N1_R2.fastq.gz
